@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GestorPro — Gestão de tarefas para equipes remotas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="img/gestor-removebg-preview.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="3" width="16" height="19" rx="2" fill="#241a0e"/>
+          <rect x="8" y="1.5" width="8" height="4" rx="1.5" fill="#5a4321"/>
+          <line x1="7" y1="9" x2="17" y2="9" stroke="#241a0e" stroke-width="1.4"/>
+          <line x1="7" y1="12.5" x2="17" y2="12.5" stroke="#241a0e" stroke-width="1.4"/>
+          <line x1="7" y1="16" x2="13" y2="16" stroke="#241a0e" stroke-width="1.4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">GestorPro</div>
+        <div class="brand-tag">TIME REMOTO · AUTOMAÇÕES</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="avatars" id="topAvatars"></div>
+      <button class="btn btn-primary" id="openModalBtn">+ Nova tarefa</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="main">
+      <div class="page-head">
+        <div>
+          <p class="page-title">Painel da equipe</p>
+          <p class="page-sub">Sistema de gestão de tarefas para equipes remotas, com automações inteligentes.</p>
+        </div>
+      </div>
+
+      <div class="stats-row" id="statsRow"></div>
+
+      <div class="board" id="board">
+        <div class="column" data-status="todo">
+          <div class="col-head">
+            <div class="col-title"><span class="dot todo"></span>A fazer</div>
+            <span class="col-count" id="count-todo">0</span>
+          </div>
+          <div class="cards" id="cards-todo"></div>
+          <button class="add-card-btn" data-status="todo">+ adicionar tarefa</button>
+        </div>
+        <div class="column" data-status="doing">
+          <div class="col-head">
+            <div class="col-title"><span class="dot doing"></span>Em andamento</div>
+            <span class="col-count" id="count-doing">0</span>
+          </div>
+          <div class="cards" id="cards-doing"></div>
+          <button class="add-card-btn" data-status="doing">+ adicionar tarefa</button>
+        </div>
+        <div class="column" data-status="done">
+          <div class="col-head">
+            <div class="col-title"><span class="dot done"></span>Concluído</div>
+            <span class="col-count" id="count-done">0</span>
+          </div>
+          <div class="cards" id="cards-done"></div>
+          <button class="add-card-btn" data-status="done">+ adicionar tarefa</button>
+        </div>
+      </div>
+
+      <div class="footer-note">GestorPro — demonstração visual estática (HTML · CSS · JS) · sem backend real</div>
+    </div>
+
+    <div class="side">
+      <div class="side-title"><span class="pulse"></span> Automação em tempo real</div>
+      <p class="side-sub">Simulação de eventos via WebSocket</p>
+      <div class="feed" id="feed"></div>
+
+      <div class="rules-block">
+        <div class="side-title" style="margin-top:0;">Regras ativas</div>
+        <p class="side-sub">Motor de automação</p>
+        <div class="rule">
+          <div>
+            <div class="rule-name">Distribuição automática</div>
+            <div class="rule-desc">Atribui novas tarefas por carga de trabalho</div>
+          </div>
+          <div class="toggle" data-rule="assign"></div>
+        </div>
+        <div class="rule">
+          <div>
+            <div class="rule-name">Alerta de atraso</div>
+            <div class="rule-desc">Notifica quando o prazo vence</div>
+          </div>
+          <div class="toggle" data-rule="overdue"></div>
+        </div>
+        <div class="rule">
+          <div>
+            <div class="rule-name">Arquivar concluídas</div>
+            <div class="rule-desc">Move tarefas antigas após 7 dias</div>
+          </div>
+          <div class="toggle off" data-rule="archive"></div>
+        </div>
+      </div>
+
+      <div class="team-block">
+        <div class="side-title" style="margin-top:0;">Equipe</div>
+        <p class="side-sub">4 pessoas · remoto</p>
+        <div id="teamList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h3>Nova tarefa</h3>
+      <div class="field">
+        <label>Título</label>
+        <input type="text" id="inpTitle" placeholder="Ex: Revisar proposta do cliente">
+      </div>
+      <div class="field">
+        <label>Responsável</label>
+        <select id="inpOwner"></select>
+      </div>
+      <div class="field">
+        <label>Prioridade</label>
+        <select id="inpPrio">
+          <option value="baixa">Baixa</option>
+          <option value="media" selected>Média</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Prazo</label>
+        <input type="date" id="inpDue">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="cancelBtn">Cancelar</button>
+        <button class="btn btn-primary" id="saveBtn">Criar tarefa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
